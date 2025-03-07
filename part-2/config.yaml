@@ -1,16 +1,10 @@
-name: factorial-4
-limit: 2000
-memory_size: 0x2000
+name: leading-zeros
+limit: 1000
+memory_size: 0x1000
 input_streams:
-  0x80: [16]
+  0x80: [1]
   0x84: []
 reports:
-  - name: Step-by-step
-    slice: all
-    view: |
-      T {stack:dec}
-      R {rstack:dec}
-      {pc}:	{instruction}	{pc:label}
   - name: Result
     slice: last
     filter:
@@ -20,4 +14,4 @@ reports:
       numio[0x84]: {io:0x84:dec}
     assert: |
       numio[0x80]: [] >>> []
-      numio[0x84]: [] >>> [27]
+      numio[0x84]: [] >>> [31]

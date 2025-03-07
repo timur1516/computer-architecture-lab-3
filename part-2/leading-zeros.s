@@ -2,48 +2,37 @@
 
 input_addr:      .word  0x80 
 output_addr:     .word  0x84
+mask:            .word  0x80000000
 
     .text
 _start:
-    @p input_addr a! @          \ input -> T
+    @p input_addr a! @
 
     count_leading_zeros
 
-    @p output_addr a! !         \ T -> output
+    @p output_addr a! !
     halt
 
-shift_right_n:
-    r>                          \ T -> R
-
-shift_cycle:
-    dup if end_shift
-    2/                          \ T >> 1
-    next shift_cycle
-    ; 
-    
-end_shift: 
-    >r drop ; 
-
 count_leading_zeros:
-    dup if zero                     \ if T == 0 then zero
+    dup if zero
+    lit 0
+    over
 
-    lit 30 r>                   \ 31 -> R
-    lit 0 over                  \ 0 -> S
 count_cycle:
-    dup                         \ T -> T T
-    >r dup r>                   \ R -> T
-    shift_right_n               \ T >> i
-    lit 1 and                   \ T & 1
-    if count_plus               \ if T == 0 then cnt++
-    over
-    >r drop ;
-
-count_plus:           
-    over lit 1 + over                 \ cnt += 1
-    next count_cycle            \ continue cycle
-    over
-    ;
+    dup
+    @p mask
+    and
+    if continue
+    end ;
+continue:
+    over lit 1 + over
+    @p mask
+    2/
+    !p mask
+    count_cycle ;
+end:
+    over ;
 
 zero:
-    drop lit 32
-    ;
+    lit 32 ;
+

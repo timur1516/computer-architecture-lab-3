@@ -30,7 +30,7 @@ mask_cycle:
 \------------------------------------------------------------------------------------------
 
 count_leading_zeros:
-    dup if zero                         \ if dataStack.top() == 0 then goto zero
+    dup if zero                         \ if dataStack.pop() == 0 then goto zero
     
     lit 0                               \ dataStack.push(0)
     over                                \ swap(T, S)
@@ -43,7 +43,7 @@ count_cycle:
     @p mask                             \ dataStack.push(mem[mask])
     and                                 \ dataStack.push(dataStack.pop() & dataStack.pop())  
     
-    if continue                         \ if dataStack.top() == 0 then goto continue
+    if continue                         \ if dataStack.pop() == 0 then goto continue
     end ;                               \ else goto end  
 
 continue:

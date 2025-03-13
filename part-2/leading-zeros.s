@@ -20,7 +20,7 @@ _start:
 init_mask:
     lit 1                               \ dataStack.push(1)
 
-    lit 30 r>                           \ for R = 30  
+    lit 30 >r                           \ for R = 30  
 mask_cycle:
     2*                                  \ T << 1
     next mask_cycle

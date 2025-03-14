@@ -5,6 +5,14 @@ input_streams:
   0x80: [65, 108, 105, 99, 101, 10]
   0x84: []
 reports:
+  # - name: Log
+  #   slice: all
+  #   view: |
+  #     T {T0:hex} {T1:hex} {T2:hex} {T3:hex}
+  #     A {A0:hex} {A1:hex} {A2:hex} {A3:hex}
+  #     S {S0Fp:hex} {S1:hex} {S2:hex} {S3:hex}
+  #     {memory:0:31}
+  #     {pc}:	{instruction}	{pc:label}
   - name: Check results
     slice: last
     view: |

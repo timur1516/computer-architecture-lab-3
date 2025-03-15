@@ -147,11 +147,10 @@ read_data:
 ;   s4 -> number of received symbols
 ;----------------------------------------------------------------------------------------------------------
 read_data_cycle:
-    addi    s4, s4, 1                           ; increase symbol counter
-
+    beq     s3, s4, read_data_overflow          ; if buffer is full then goto read_data_overflow
+    
     lw      a0, 0(s1)                           ; read new sybmol
 
-    beq     s3, s4, check_overflow              ; if buffer is full then goto check_overflow
     beq     a0, s2, ret_read_data               ; if received symbol is eof then return
 
     mv      a1, s0                              ; store received symbol in buffer
@@ -160,16 +159,15 @@ read_data_cycle:
     lw      ra, 20(sp)
 
     addi    s0, s0, 1                           ; increase buffer ptr
+    addi    s4, s4, 1                           ; increase symbol counter
 
     j       read_data_cycle                     ; continue cycle
 ;----------------------------------------------------------------------------------------------------------
-check_overflow:
-    beq     a0, s2, ret_read_data               ; if last received symbol is eof that it's ok, return
-    addi    s4, zero, 0                         ; else write zero to symbol counter
+read_data_overflow:
+    addi    s4, zero, -1                        ; write -1 to symbol counter
 ;----------------------------------------------------------------------------------------------------------
 ret_read_data:
-    addi    a0, s4, -1                          ; write number of received symbols (s4) to return (a0)
-                                                ; substract one because we don't consider eof symbol
+    mv      a0, s4                              ; write number of received symbols (s4) to return (a0)
 
     lw      s0, 0(sp)                           ; restore callee saved registers                 
     lw      s1, 4(sp)

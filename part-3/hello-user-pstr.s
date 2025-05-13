@@ -13,14 +13,18 @@ str3_:              .byte   'What is your name?\n'
 
 input_addr:         .word   0x80
 output_addr:        .word   0x84
-eof:                .byte   '\n'
+eof:                .word   0xA
 buf_start_addr:     .word   0x0
 buf_size_bytes:     .word   0x20
 overflow_value:     .word   0xCCCC_CCCC
+init_sp_value:      .word   0x1000  
 
     .text
-
+    .org 0x100
 _start:
+    lui     sp, %hi(init_sp_value)              ; load init value of stack pointer
+    addi    sp, sp, %lo(init_sp_value)
+    lw      sp, 0(sp)
 ;----------------------------------------------------------------------------------------------------------
     lui     s1, %hi(buf_start_addr)             ; load buffer start address into s1
     addi    s1, s1, %lo(buf_start_addr)
